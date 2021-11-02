@@ -1,6 +1,12 @@
 import React from "react";
 import { render } from "react-dom";
 
+
+async function getPolls() {
+    const rawResponse = await fetch("/polls/");
+    const data = await rawResponse.json();
+}
+
 function App () {
     return <h1>Her bygger vi videre på react koden vår med komponenter osv.</h1>
 }
