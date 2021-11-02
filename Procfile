@@ -1,1 +1,1 @@
-web: gunicorn feedapp.feedapp.application --log-file -
+web: gunicorn feedapp.wsgi --log-file -
