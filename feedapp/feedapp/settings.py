@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-awfi**fzjp+3ap2()-^mfog4^ria^ryq-9u$&3znv$x35_umj#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*.herokuapp.com']
+ALLOWED_HOSTS = ['https://feedapp-django.herokuapp.com/']
 
 
 # Application definition
