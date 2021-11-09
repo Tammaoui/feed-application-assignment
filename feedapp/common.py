@@ -26,9 +26,14 @@ SECRET_KEY = 'django-insecure-awfi**fzjp+3ap2()-^mfog4^ria^ryq-9u$&3znv$x35_umj#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://feedapp-django.herokuapp.com/']
 
+ALLOWED_HOSTS = ['https://feedapp-django.herokuapp.com/', '*']
 
+# Everytime user model is needed:
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
+
+AUTH_USER_MODEL = 'accounts.User'
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts',
     'frontend'
 ]
 

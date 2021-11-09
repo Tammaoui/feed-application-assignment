@@ -1,0 +1,59 @@
+{% extends 'base.html' %} {% block content %}
+
+<style>
+  html {
+    font-family: "Open Sans", sans-serif;
+    font-weight: lighter;
+  }
+
+  h3,
+  h2 {
+    text-align: center;
+  }
+
+  .login-container {
+    margin: 0 auto;
+    display: grid;
+    width: 420px;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+
+  input {
+    padding: 12px;
+  }
+
+  button {
+    padding: 12px;
+    background: #1b262c;
+    border: none;
+    border-radius: 3px;
+    color: white;
+  }
+
+  form {
+    display: grid;
+    grid-gap: 0.6vh;
+  }
+</style>
+
+<div class="login-container">
+  <h2>Feed App</h2>
+  <h2>Login<h2>
+  <form action="accounts/create" method="post">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit">Login</button>
+    <button onclick="redirect()" type="submit">Register</button>
+  </form>
+</div>
+<script>
+  function redirect() {
+    window.location.href = window.location.origin + "/register";
+  }
+</script>
+
+{% endblock content %}
