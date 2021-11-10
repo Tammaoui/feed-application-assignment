@@ -28,6 +28,8 @@ DEBUG = True
 
 
 ALLOWED_HOSTS = ['https://feedapp-django.herokuapp.com/', '*']
+LOGIN_REDIRECT_URL = '/your-path'
+LOGIN_URL = 'login'
 
 # Everytime user model is needed:
 # from django.contrib.auth import get_user_model

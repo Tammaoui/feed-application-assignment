@@ -7,8 +7,6 @@ from . import views
 
 urlpatterns = [
     path('register/', views.register),
+    path('login/', views.login),
+    path('', views.index, name="index")
 ]
-
-index = [re_path(r'^(?:.*)/?$', views.index, name="index"), ]
-
-urlpatterns += index

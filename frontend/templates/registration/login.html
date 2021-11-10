@@ -44,11 +44,12 @@
 <div class="login-container">
   <h2>Feed App</h2>
   <h2>Login<h2>
-  <form action="accounts/create" method="post">
-    {% csrf_token %} {{ form.as_p }}
+  <form action="/login/" method="post">
+    {% csrf_token %} 
+    {{ form }}
     <button type="submit">Login</button>
-    <button onclick="redirect()" type="submit">Register</button>
   </form>
+  <button onclick="redirect()" type="submit">Register</button>
 </div>
 <script>
   function redirect() {

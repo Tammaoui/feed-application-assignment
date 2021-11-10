@@ -7,10 +7,9 @@ User = get_user_model()
 
 class RegisterForm(forms.ModelForm):
     """
-    The default 
+    The default
 
     """
-
     password = forms.CharField(widget=forms.PasswordInput)
     password_2 = forms.CharField(
         label='Confirm Password', widget=forms.PasswordInput)
@@ -41,7 +40,8 @@ class RegisterForm(forms.ModelForm):
         return cleaned_data
 
 
-class LoginForm():
+class LoginForm(forms.ModelForm):
+    email = forms.CharField(label='Your email', max_length=100)
     password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
