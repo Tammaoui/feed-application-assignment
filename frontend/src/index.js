@@ -1,19 +1,17 @@
 import React, { Fragment } from "react";
 import { RecoilRoot } from "recoil";
 import ReactDOM from "react-dom";
-import Profile from "./components/Profile"
 import Header from "./components/Header"
-import Home from "./components/Home"
-import PollArchive from "./components/MyPolls/PollArchive"
-import CreatePoll from "./components/MyPolls/CreatePoll"
-import Poll from "./components/MyPolls/Poll"
+
+import {
+  BrowserRouter as Router,
+} from "react-router-dom";
 
 const App = () => {
   return (
-    <Fragment>
+    <Router>
       <Header />
-      <Poll />
-    </Fragment>
+    </Router>
   )
 };
 
