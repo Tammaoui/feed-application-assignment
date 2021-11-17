@@ -31,7 +31,7 @@ class Home extends React.Component {
                 </div>
                 <div style={{ display: "flex", justifyContent: "center", paddingTop: "40px" }}>
                     <Card style={{ width: "60%" }}>
-                        <Card.Header className="text-center" ><h2>Latest votes</h2></Card.Header>
+                        <Card.Header className="text-center" ><h3>Latest votes</h3></Card.Header>
                         <Card.Body>
                             <ListGroup>
                                 <ListGroup.Item>{this.state.name} har svart "{this.state.pollChoice}" på "{this.state.poll}"</ListGroup.Item>
