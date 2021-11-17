@@ -16,6 +16,7 @@ class Header extends React.Component {
                             <Nav.Link href="#pricing" style={{paddingLeft: "40px"}}>Profile</Nav.Link>
                             <Nav.Link href="#deets" style={{paddingLeft: "40px"}}>Polls</Nav.Link>
                         </Nav>
+                        <Navbar.Brand style={{color: 'transparent'}}>FeedApp</Navbar.Brand>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
