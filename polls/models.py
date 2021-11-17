@@ -12,7 +12,7 @@ class Poll(models.Model):
 
     created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now=True)
-    last_edited = models.DateTimeField()
+    last_edited = models.DateTimeField(auto_now=True)
 
 
 class Choice(models.Model):

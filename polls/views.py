@@ -1,9 +1,10 @@
+import json
 from django.http import HttpResponse
 from http import HTTPStatus
-
 from .models import Poll, Choice
 
 from django.views.decorators.csrf import csrf_exempt
+
 
 # Lage en poll
 
@@ -17,16 +18,22 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def hello_world(request):
     if request.method == "POST":
-        print(request.POST['poll_question'])
+        body = json.loads(request.body)
+        print(body['poll_question'])
     return HttpResponse("Hello world!")
 
+
+@csrf_exempt
 def polls(request):
     response_data = None
+    print(id)
     match request.method:
         case "POST":
-            poll_question = request.POST['poll_question']
+            body = json.loads(request.body)
+            poll_question = body['poll_question']
+            active = body['active']
             created_by = request.user
-            poll = Poll(poll_question=poll_question, created_by=created_by)
+            poll = Poll(poll_question=poll_question, active=active, created_by=created_by)
             poll.save()
         case "DELETE":
             poll_id = request.DELETE['id']
@@ -34,9 +41,41 @@ def polls(request):
         case "PUT":
             pass
         case "GET":
-            response_data = Poll.objects.get(created_by=request.user)
+            list_of_polls = []
+            response_data = list(Poll.objects.filter(created_by=request.user))
+            for poll in response_data:
+                list_of_polls.append({
+                    'id': poll.id,
+                    'poll_question': poll.poll_question,
+                    'active': poll.active,
+                    'public': poll.public,
+                    'choices': get_choices_by_poll(poll)
+                })
+            response_data = list_of_polls
+    return HttpResponse(json.dumps(response_data), status=HTTPStatus.OK)
 
-    return HttpResponse(response_data, status=HTTPStatus.OK)
+
+def get_single_poll(request, id):
+    poll = Poll.objects.get(pk=id)
+    if poll is None:
+        return HttpResponse(status=HTTPStatus.NOT_FOUND)
+    poll_data = {
+        'id': poll.id,
+        'poll_question': poll.poll_question,
+        'active': poll.active,
+        'public': poll.public,
+        'choices': get_choices_by_poll(poll)}
+    return HttpResponse(json.dumps(poll_data), status=200)
+
+
+def get_choices_by_poll(poll):
+    choices_as_list = []
+    choices_queryset = Choice.objects.filter(poll=poll)
+    for choice in choices_queryset:
+        choices_as_list.append({
+            "text": choice.choice_text
+        })
+    return choices_as_list
 
 
 def search_for_polls(request, query):
@@ -48,6 +87,7 @@ def choices(request):
     response_data = None
     match request.method:
         case "POST":
+            data = json.loads(request.body)
             choice_text = request.POST['choice_text']
             poll_id = request.POST['poll_id']
             poll = Poll.objects.get(pk=poll_id)

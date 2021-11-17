@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, {Component, Fragment, useState} from 'react'
 import Card from "react-bootstrap/Card"
 import ListGroup from "react-bootstrap/ListGroup"
 import InputGroup from "react-bootstrap/InputGroup"
@@ -8,8 +8,29 @@ import FloatingLabel from "react-bootstrap/esm/FloatingLabel"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 
-export class CreatePoll extends Component {
-    render() {
+function CreatePoll(){
+        const [pollQuestion, setPollQuestion] = useState("");
+        const [active, setActive] = useState(false);
+
+        function testSubmit()  {
+            console.log("Test")
+        }
+
+        async function savePoll() {
+            const payload = {
+                "poll_question": pollQuestion,
+                "active": active
+            }
+
+            const rawResponse = await fetch('/polls', {
+                method : "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+        }
+
         return (
             <Fragment>
                 <div style={{ display: "flex", justifyContent: "center", paddingTop: "40px" }}>
@@ -17,7 +38,7 @@ export class CreatePoll extends Component {
                         <Card.Header className="text-center" >
                             <InputGroup size="lg" className="d-grid gap-2">
                                 <FloatingLabel controlId="floatingTextarea" label="Name of poll">
-                                    <FormControl placeholder="Name of poll" aria-label="pollHeader" aria-describedby="inputGroup-sizing-sm"></FormControl>
+                                    <FormControl value={pollQuestion} onChange={(e) => setPollQuestion(e.target.value)} placeholder="Name of poll" aria-label="pollHeader" aria-describedby="inputGroup-sizing-sm"></FormControl>
                                 </FloatingLabel>
                             </InputGroup>
                         </Card.Header>
@@ -47,11 +68,11 @@ export class CreatePoll extends Component {
                                 <Button variant="secondary" size="lg">Add option</Button>
                             </div>
                         </Card.Body>
+                        <Button onClick={savePoll} variant="secondary" size="lg">Save</Button>
                     </Card>
                 </div>
             </Fragment>
         )
-    }
 }
 
 export default CreatePoll

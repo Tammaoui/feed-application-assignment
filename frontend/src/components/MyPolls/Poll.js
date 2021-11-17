@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, {Component, Fragment, useEffect, useState} from 'react'
 import Card from "react-bootstrap/Card"
 import ListGroup from "react-bootstrap/ListGroup"
 import InputGroup from "react-bootstrap/InputGroup"
@@ -8,8 +8,20 @@ import FloatingLabel from "react-bootstrap/esm/FloatingLabel"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 
-export class Poll extends Component {
-    render() {
+function Poll (){
+        const [poll, setPoll] = useState({})
+
+        async function getAllPolls() {
+            const id = 1;
+            const rawResponse = await fetch(`polls/${id}`);
+            const data = await rawResponse.json();
+            setPoll(data)
+        }
+
+        useEffect(() => {
+            getAllPolls()
+        },[])
+
         return (
             <Fragment>
                 <div style={{ display: "flex", justifyContent: "center" , paddingTop: "40px"}}>
@@ -24,46 +36,27 @@ export class Poll extends Component {
                         </Card.Header>
                         <Card.Body>
                             <ListGroup>
-                                <ListGroup.Item>
+                                {poll && poll.choices?.map((choice => {
+                                    return <ListGroup.Item>
                                     <Row>
                                         <Col md={4}>
-                                            Cat
+                                            {choice.text}
                                         </Col>
                                         <Col md={{ span: 4, offset: 4 }}>
                                             <input type="radio" value="optionX" name="activePollChoice" style={{ width: "20px", height: "20px" }} />
                                         </Col>
                                     </Row>
                                 </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <Row>
-                                        <Col md={4}>
-                                            Dog
-                                        </Col>
-                                        <Col md={{ span: 4, offset: 4 }}>
-                                            <input type="radio" value="optionX" name="activePollChoice" style={{ width: "20px", height: "20px" }} />
-                                        </Col>
-                                    </Row>
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <Row>
-                                        <Col md={4}>
-                                            Horse
-                                        </Col>
-                                        <Col md={{ span: 4, offset: 4 }}>
-                                            <input type="radio" value="optionX" name="activePollChoice" style={{ width: "20px", height: "20px" }} />
-                                        </Col>
-                                    </Row>
-                                </ListGroup.Item>
+                                }))}
                             </ListGroup>
                             <div className="d-grid gap-2" style={{ marginTop: "20px" }}>
-                                <Button variant="secondary" size="lg">Add option</Button>
+                                <Button variant="secondary" size="lg">Vote</Button>
                             </div>
                         </Card.Body>
                     </Card>
                 </div>
             </Fragment>
         )
-    }
 }
 
 export default Poll
