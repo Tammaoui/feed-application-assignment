@@ -1,10 +1,20 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { RecoilRoot } from "recoil";
 import ReactDOM from "react-dom";
-import "./App.scss";
+import Profile from "./components/Profile"
+import Header from "./components/Header"
+import Home from "./components/Home"
+import PollArchive from "./components/MyPolls/PollArchive"
+import CreatePoll from "./components/MyPolls/CreatePoll"
+import Poll from "./components/MyPolls/Poll"
 
 const App = () => {
-  return <h2>Heii</h2>;
+  return (
+    <Fragment>
+      <Header />
+      <Poll />
+    </Fragment>
+  )
 };
 
 ReactDOM.render(
