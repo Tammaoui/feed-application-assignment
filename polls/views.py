@@ -77,7 +77,6 @@ def get_single_poll(request, id):
 def get_choices_by_poll(poll):
     choices_as_list = []
     choices_queryset = Choice.objects.filter(poll=poll)
-    print(choices_queryset)
     for choice in choices_queryset:
         choices_as_list.append({
             "text": choice.choice_text,
@@ -87,8 +86,18 @@ def get_choices_by_poll(poll):
 
 
 def search_for_polls(request, query):
-    poll = Poll.objects.get(poll_question__contains=query)
-    return HttpResponse(poll)
+    polls_queryset = Poll.objects.filter(poll_question__contains=query)
+    list_of_polls = []
+    for poll in polls_queryset:
+        list_of_polls.append({
+                    'id': poll.id,
+                    'poll_question': poll.poll_question,
+                    'active': poll.active,
+                    'public': poll.public,
+                    'choices': get_choices_by_poll(poll)
+                })
+    response_data = list_of_polls
+    return HttpResponse(json.dumps(response_data), status=HTTPStatus.OK)
 
 
 @csrf_exempt
