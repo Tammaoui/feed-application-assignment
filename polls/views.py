@@ -80,7 +80,8 @@ def get_choices_by_poll(poll):
     for choice in choices_queryset:
         choices_as_list.append({
             "text": choice.choice_text,
-            "id": choice.id
+            "id": choice.id,
+            "votes": choice.votes
         })
     return choices_as_list
 
