@@ -104,6 +104,15 @@ def choices(request):
             Choice.objects.get(pk=choice_id).delete()
             pass
         case "PUT":
-            print("Update choice")
+            data = json.loads(request.body)
+            poll = data["poll"]
+            choice_text = data["choice_text"]
+            choices = get_choices_by_poll(poll)
+            choice_to_update = None
+            for choice in choices:
+                if choice["text"] == choice_text:
+                    choice_to_update = choice
+                    break
+            
 
     return HttpResponse(response_data, status=HTTPStatus.OK)

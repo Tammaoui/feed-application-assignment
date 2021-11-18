@@ -8,14 +8,32 @@ import FloatingLabel from "react-bootstrap/esm/FloatingLabel"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 
-function Poll (){
+function Poll () {
         const [poll, setPoll] = useState({})
+        const [choice, setChoice] = useState("")
+        const [poll_id, setPollId] = useState(null)
 
         async function getAllPolls() {
-            const id = 1;
+            const id = 7;
             const rawResponse = await fetch(`polls/${id}`);
             const data = await rawResponse.json();
             setPoll(data)
+            setPollId(id)
+        }
+
+        async function updatePollChoice () {
+            const payload = {
+                "choice_text": choice,
+                "poll": poll
+            }
+
+            const rawResponse = await fetch('/choices', {
+                method : "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
         }
 
         useEffect(() => {
@@ -26,7 +44,7 @@ function Poll (){
             <Fragment>
                 <div style={{ display: "flex", justifyContent: "center" , paddingTop: "40px"}}>
                     <h1>
-                        Question
+                        {poll["poll_question"]}
                     </h1>
                 </div>
                 <div style={{ display: "flex", justifyContent: "center", paddingTop: "40px" }}>
@@ -37,20 +55,20 @@ function Poll (){
                         <Card.Body>
                             <ListGroup>
                                 {poll && poll.choices?.map((choice => {
-                                    return <ListGroup.Item>
+                                    return <ListGroup.Item key={choice.text}>
                                     <Row>
                                         <Col md={4}>
                                             {choice.text}
                                         </Col>
                                         <Col md={{ span: 4, offset: 4 }}>
-                                            <input type="radio" value="optionX" name="activePollChoice" style={{ width: "20px", height: "20px" }} />
+                                            <input type="radio" onChange={(e) => setChoice(e.target.value) } value={choice.text} name="activePollChoice" style={{ width: "20px", height: "20px" }} />
                                         </Col>
                                     </Row>
                                 </ListGroup.Item>
                                 }))}
                             </ListGroup>
                             <div className="d-grid gap-2" style={{ marginTop: "20px" }}>
-                                <Button variant="secondary" size="lg">Vote</Button>
+                                <Button onClick={(e) => updatePollChoice()} variant="secondary" size="lg">Vote</Button>
                             </div>
                         </Card.Body>
                     </Card>
