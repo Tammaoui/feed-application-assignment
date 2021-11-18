@@ -97,7 +97,8 @@ def get_choices_by_poll(poll):
 
 
 def search_for_polls(request, query):
-    polls_queryset = Poll.objects.filter(poll_question__contains=query)
+    polls_queryset = Poll.objects.filter(poll_question__icontains=query)
+    print(polls_queryset)
     list_of_polls = []
     for poll in polls_queryset:
         list_of_polls.append({

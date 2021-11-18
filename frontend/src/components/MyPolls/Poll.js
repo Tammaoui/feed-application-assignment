@@ -4,15 +4,15 @@ import ListGroup from "react-bootstrap/ListGroup"
 import Button from "react-bootstrap/Button"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
+import {useParams} from "react-router-dom";
 
-function Poll () {
+function Poll (props) {
         const [poll, setPoll] = useState({})
         const [choice, setChoice] = useState(-1)
         const [responseMessage, setResponseMessage] = useState(undefined)
-
-        async function getAllPolls() {
-            const id = 1;
-            const rawResponse = await fetch(`api/polls/${id}`);
+        let { id } = useParams();
+        async function getPoll() {
+            const rawResponse = await fetch(`http://127.0.0.1:8000/api/polls/${id}`);
             const data = await rawResponse.json();
             setPoll(data)
         }
@@ -22,7 +22,7 @@ function Poll () {
                 "choice_id": choice
             }
 
-            const rawResponse = await fetch('api/choices', {
+            const rawResponse = await fetch('http://127.0.0.1:8000/api/choices', {
                 method : "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -34,7 +34,7 @@ function Poll () {
         }
 
         useEffect(() => {
-            getAllPolls()
+            getPoll()
         },[])
 
         return (
@@ -55,7 +55,7 @@ function Poll () {
                                     return <ListGroup.Item key={choice.text}>
                                     <Row>
                                         <Col md={4}>
-                                            {choice.text}
+                                            {choice.choice_text}
                                         </Col>
                                         <Col md={{ span: 4, offset: 4 }}>
                                             <input type="radio" onChange={(e) => setChoice(e.target.value) } value={choice.id} name="activePollChoice" style={{ width: "20px", height: "20px" }} />

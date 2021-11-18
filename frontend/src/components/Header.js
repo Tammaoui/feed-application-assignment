@@ -3,15 +3,14 @@ import Navbar from "react-bootstrap/Navbar"
 import Container from "react-bootstrap/Container"
 import Nav from "react-bootstrap/Nav"
 import {
-  Routes ,
-  Route,
-  Link
+    Routes,
+    Route,
+    Link, useHistory, withRouter
 } from "react-router-dom";
 import Home from "./Home";
 import Profile from "./Profile";
-import Poll from "./MyPolls/Poll";
 import PollPage from "../pages/PollPage";
-
+import Poll from "./MyPolls/Poll";
 function Header() {
         return (
             <Fragment>
@@ -21,7 +20,7 @@ function Header() {
                         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                         <Navbar.Collapse id="responsive-navbar-nav">
                             <Nav className="m-auto">
-                                <Link to="/home">Home</Link>
+                                <Link to="/">Home</Link>
                                 <Link to="/profile" style={{paddingLeft: "40px"}}>Profile</Link>
                                 <Link to="/polls" style={{paddingLeft: "40px"}}>Polls</Link>
                             </Nav>
@@ -30,8 +29,9 @@ function Header() {
                     </Container>
                 </Navbar>
                 <Routes>
-                    <Route path="/home" element={<Home/>}/>
+                    <Route path="/" element={<Home/>}/>
                     <Route path="/profile" element={<Profile/>}/>
+                    <Route path="/polls/:id" element={<Poll/>}/>
                     <Route path="/polls" element={<PollPage/>}/>
                 </Routes>
             </Fragment>

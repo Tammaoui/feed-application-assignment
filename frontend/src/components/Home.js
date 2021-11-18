@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import Card from "react-bootstrap/Card"
 import ListGroup from "react-bootstrap/ListGroup"
 import Form from "react-bootstrap/Form"
@@ -6,15 +6,19 @@ import FormControl from "react-bootstrap/FormControl"
 import Button from "react-bootstrap/Button"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
+import {useHistory} from "react-router-dom";
 
 function Home() {
-    const [searchQuery, setSearchQuery] = useState("")
     const [pollsFromSearch, setPollsFromSearch] = useState([])
-
-    async function getSearchQuery() {
+    async function getSearchQuery(e) {
+        const searchQuery = e.target.value;
         const rawResponse = await fetch(`api/polls/search/${searchQuery}`)
         const polls = await rawResponse.json();
         setPollsFromSearch(polls)
+    }
+
+    function handleOnClick(id) {
+        window.location.href = `http://127.0.0.1:8000/polls/${id}`;
     }
 
     return (
@@ -26,9 +30,8 @@ function Home() {
                         placeholder="Search"
                         className="me-2"
                         aria-label="Search"
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => getSearchQuery(e)}
                     />
-                    <Button onClick={(e) => getSearchQuery()} variant="outline-success">Search</Button>
                 </Form>
             </div>
 
@@ -42,7 +45,7 @@ function Home() {
                             {pollsFromSearch && pollsFromSearch?.map((poll => {
                                 return <ListGroup.Item key={poll.id}>
                                     <Row>
-                                        <Col md={4}>
+                                        <Col onClick={() => handleOnClick(poll.id)} style={{cursor:"pointer"}} md={4}>
                                             {poll.poll_question}
                                         </Col>
                                     </Row>
