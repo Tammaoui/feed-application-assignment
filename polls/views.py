@@ -32,9 +32,15 @@ def polls(request):
             body = json.loads(request.body)
             poll_question = body['poll_question']
             active = body['active']
+            public = body['public']
             created_by = request.user
-            poll = Poll(poll_question=poll_question, active=active, created_by=created_by)
+            poll = Poll(poll_question=poll_question, active=active, public=public, created_by=created_by)
             poll.save()
+            poll_choices = body["poll_choices"]
+            if (poll_choices):
+                for poll_choice in poll_choices:
+                    pc = Choice(choice_text=poll_choice, poll=poll, votes=0)
+                    pc.save()
         case "DELETE":
             poll_id = request.DELETE['id']
             Poll.objects.get(pk=poll_id).delete()

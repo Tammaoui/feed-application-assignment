@@ -10,7 +10,9 @@ import Col from "react-bootstrap/Col"
 
 function CreatePoll(){
         const [pollQuestion, setPollQuestion] = useState("");
+        const [isPublic, setPublic] = useState(false);
         const [active, setActive] = useState(false);
+        const [pollChoices, setPollChoices] = useState([]);
 
         function testSubmit()  {
             console.log("Test")
@@ -19,7 +21,9 @@ function CreatePoll(){
         async function savePoll() {
             const payload = {
                 "poll_question": pollQuestion,
-                "active": active
+                "active": active,
+                "public": isPublic,
+                "poll_choices": pollChoices
             }
 
             const rawResponse = await fetch('/polls', {
@@ -29,6 +33,12 @@ function CreatePoll(){
                 },
                 body: JSON.stringify(payload)
             })
+        }
+
+        function addOption(i, value) {
+            let options = [...pollChoices]
+            options[i] = value
+            setPollChoices(options)
         }
 
         return (
@@ -47,7 +57,14 @@ function CreatePoll(){
                                 <ListGroup.Item>
                                     <InputGroup className="d-grid gap-2" size="sm" className="d-grid gap-2">
                                         <FloatingLabel controlId="floatingTextarea" label="Poll choice #1">
-                                            <FormControl placeholder="Poll choice" aria-label="pollHeader" aria-describedby="inputGroup-sizing-sm"></FormControl>
+                                            <FormControl onChange={(e) => addOption(0, e.target.value)} placeholder="Poll choice" aria-label="pollHeader" aria-describedby="inputGroup-sizing-sm"></FormControl>
+                                        </FloatingLabel>
+                                    </InputGroup>
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                    <InputGroup className="d-grid gap-2" size="sm" className="d-grid gap-2">
+                                        <FloatingLabel controlId="floatingTextarea" label="Poll choice #2">
+                                            <FormControl onChange={(e) => addOption(1, e.target.value)} placeholder="Poll choice" aria-label="pollHeader" aria-describedby="inputGroup-sizing-sm"></FormControl>
                                         </FloatingLabel>
                                     </InputGroup>
                                 </ListGroup.Item>
@@ -55,13 +72,13 @@ function CreatePoll(){
                             <Row  style={{ margin: "10px"}}>
                                 <Col md={4}>
                                     <a> Active </a>
-                                    <input type="radio" value="option1" name="activeStatus" style={{ margin: "5px"}}/>
-                                    <input type="radio" value="option2" name="activeStatus" style={{ margin: "5px"}}/>
+                                    <input onChange={(e) => setActive(true)} type="radio" value="option1" name="activeStatus" style={{ margin: "5px"}} />
+                                    <input onChange={(e) => setActive(false)} type="radio" value="option2" name="activeStatus" style={{ margin: "5px"}} />
                                 </Col>
                                 <Col md={{ span: 4, offset: 4 }} style={{ display: "flex", justifyContent: "right" }}>
                                     <a> Public </a>
-                                    <input type="radio" value="option3" name="publicStatus" style={{ margin: "5px"}}/>
-                                    <input type="radio" value="option4" name="publicStatus" style={{ margin: "5px"}}/>
+                                    <input onChange={(e) => setPublic(true)} type="radio" value="option3" name="publicStatus" style={{ margin: "5px"}} />
+                                    <input onChange={(e) => setPublic(false)} type="radio" value="option4" name="publicStatus" style={{ margin: "5px"}} />
                                 </Col>
                             </Row>
                             <div className="d-grid gap-2" style={{ marginTop: "20px" }}>
