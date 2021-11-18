@@ -24,6 +24,23 @@ function CreatePoll(){
     const [polls, setPolls] = useState([])
 
     async function savePoll() {
+        let valid = true;
+        if(pollQuestion === "") {
+            setResponseMessage("Poll question is required");
+            valid = false;
+        }
+        if(pollChoices.length < 2) {
+            setResponseMessage("Minimum 2 choices is required");
+            valid  = false;
+        }
+        pollChoices.forEach((c) => {
+            if(c.choice_text === "") {
+                setResponseMessage("Can not have a choice with no text");
+                valid = false;
+            }
+        })
+        if(!valid) return;
+
         setIsSumbitting(true);
         const payload = {
             "poll_question": pollQuestion,
@@ -79,20 +96,17 @@ function CreatePoll(){
 
     useEffect(() => {
         if(activePollId !== -1) {
-
             let currentPoll = polls.filter(p => p.id === activePollId)[0];
-            console.log(currentPoll)
             let choices = currentPoll.choices;
             let question_text = currentPoll.poll_question;
-            console.log(choices)
+
             setPollChoices(choices);
             setPollQuestion(question_text);
-
             setCreating(false);
         }
         getAllUserPolls();
 
-    }, [activePollId])
+    }, [activePollId, creating])
 
     async function deletePoll() {
         setIsSumbitting(true);

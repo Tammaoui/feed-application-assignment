@@ -37,10 +37,13 @@ def polls(request):
             created_by = request.user
             poll = Poll(poll_question=poll_question, active=active, public=public, created_by=created_by)
             poll.save()
+
             poll_choices = body["poll_choices"]
-            if (poll_choices):
+            print(poll_choices)
+            if poll_choices:
                 for poll_choice in poll_choices:
-                    pc = Choice(choice_text=poll_choice, poll=poll, votes=0)
+                    print(poll_choice['choice_text'])
+                    pc = Choice(choice_text=poll_choice['choice_text'], poll=poll, votes=0)
                     pc.save()
             response_data = "Poll created successfully"
             response_status = HTTPStatus.CREATED
@@ -65,7 +68,6 @@ def polls(request):
                     'choices': get_choices_by_poll(poll)
                 })
             response_data = list_of_polls
-    print(response_data)
     return HttpResponse(json.dumps(response_data), status=response_status)
 
 
@@ -84,10 +86,10 @@ def get_single_poll(request, id):
 
 def get_choices_by_poll(poll):
     choices_as_list = []
-    choices_queryset = Choice.objects.filter(poll=poll)
+    choices_queryset = list(Choice.objects.filter(poll=poll))
     for choice in choices_queryset:
         choices_as_list.append({
-            "text": choice.choice_text,
+            "choice_text": choice.choice_text,
             "id": choice.id,
             "votes": choice.votes
         })
