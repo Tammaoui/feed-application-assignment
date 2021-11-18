@@ -27,7 +27,6 @@ def hello_world(request):
 def polls(request):
     response_data = None
     response_status = HTTPStatus.OK
-    print(id)
     match request.method:
         case "POST":
             body = json.loads(request.body)
@@ -81,6 +80,7 @@ def get_single_poll(request, id):
         'active': poll.active,
         'public': poll.public,
         'choices': get_choices_by_poll(poll)}
+    print(poll_data)
     return HttpResponse(json.dumps(poll_data), status=200)
 
 

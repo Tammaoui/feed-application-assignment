@@ -8,6 +8,7 @@ import FloatingLabel from "react-bootstrap/esm/FloatingLabel"
 import PollArchive from "./PollArchive";
 import {activePollEdit} from "../../states/atoms";
 import {useRecoilState} from "recoil";
+import PollResult from "./PollResult";
 
 
 function CreatePoll(){
@@ -133,6 +134,17 @@ function CreatePoll(){
         setIsSumbitting(false);
     }
 
+    function getPollById() {
+        let valueToReturn;
+        polls.forEach((p) => {
+            if(p.id === activePollId) {
+                valueToReturn = p;
+                return;
+            }
+        })
+        return valueToReturn;
+    }
+
     return (
             <Fragment>
                 <h2>{creating ? "Create a poll" : "Edit a poll"}</h2>
@@ -161,6 +173,7 @@ function CreatePoll(){
                         {responseMessage && <p style={{marginTop: "20px"}}>{responseMessage}</p>}
                     </Card>
                 </div>
+                { activePollId !== -1 && <PollResult poll={getPollById()}/>}
                 <PollArchive polls={polls}/>
             </Fragment>
         )

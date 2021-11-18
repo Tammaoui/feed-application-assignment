@@ -5,18 +5,7 @@ import Col from "react-bootstrap/Col"
 import ListGroup from "react-bootstrap/ListGroup"
 
 
-function PollResult() {
-    const [poll, setPoll] = useState({})
-
-    async function getPollResultById(id) {
-        const rawResponse = await fetch(`polls/${id}`);
-        const data = await rawResponse.json();
-        setPoll(data)
-    }
-
-    useEffect(() => {
-        getPollResultById(1)
-    },[])
+function PollResult({poll}) {
 
     return (
         <Fragment>
@@ -32,18 +21,18 @@ function PollResult() {
                         </Card.Header>
                         <Card.Body>
                             <ListGroup>
-                                {poll && poll.choices?.map((choice => {
-                                    return <ListGroup.Item key={choice.text}>
+                                {poll && poll.choices?.map((choice, index) => {
+                                    return <ListGroup.Item key={index}>
                                     <Row>
                                         <Col md={4}>
-                                            {choice.text}
+                                            {choice.choice_text}
                                         </Col>
                                         <Col md={{ span: 4, offset: 4 }}>
                                             Number of votes: {choice.votes}
                                         </Col>
                                     </Row>
                                 </ListGroup.Item>
-                                }))}
+                                })}
                             </ListGroup>
                            
                         </Card.Body>
