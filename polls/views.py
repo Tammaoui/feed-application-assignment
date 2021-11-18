@@ -77,9 +77,11 @@ def get_single_poll(request, id):
 def get_choices_by_poll(poll):
     choices_as_list = []
     choices_queryset = Choice.objects.filter(poll=poll)
+    print(choices_queryset)
     for choice in choices_queryset:
         choices_as_list.append({
-            "text": choice.choice_text
+            "text": choice.choice_text,
+            "id": choice.id
         })
     return choices_as_list
 
@@ -89,6 +91,7 @@ def search_for_polls(request, query):
     return HttpResponse(poll)
 
 
+@csrf_exempt
 def choices(request):
     response_data = None
     match request.method:
@@ -105,14 +108,12 @@ def choices(request):
             pass
         case "PUT":
             data = json.loads(request.body)
-            poll = data["poll"]
-            choice_text = data["choice_text"]
-            choices = get_choices_by_poll(poll)
-            choice_to_update = None
-            for choice in choices:
-                if choice["text"] == choice_text:
-                    choice_to_update = choice
-                    break
+            choice_id = data['choice_id']
+            choice = Choice.objects.get(pk=choice_id)
+            choice.votes = choice.votes + 1
+            choice.save()
+            response_data = 'Your vote has been registered'
             
+          
 
     return HttpResponse(response_data, status=HTTPStatus.OK)

@@ -10,21 +10,19 @@ import Col from "react-bootstrap/Col"
 
 function Poll () {
         const [poll, setPoll] = useState({})
-        const [choice, setChoice] = useState("")
-        const [poll_id, setPollId] = useState(null)
+        const [choice, setChoice] = useState(-1)
+        const [responseMessage, setResponseMessage] = useState(undefined)
 
         async function getAllPolls() {
-            const id = 7;
+            const id = 1;
             const rawResponse = await fetch(`polls/${id}`);
             const data = await rawResponse.json();
             setPoll(data)
-            setPollId(id)
         }
 
         async function updatePollChoice () {
             const payload = {
-                "choice_text": choice,
-                "poll": poll
+                "choice_id": choice
             }
 
             const rawResponse = await fetch('/choices', {
@@ -34,6 +32,8 @@ function Poll () {
                 },
                 body: JSON.stringify(payload)
             })
+            const message = await rawResponse.text()
+            setResponseMessage(message)
         }
 
         useEffect(() => {
@@ -61,7 +61,7 @@ function Poll () {
                                             {choice.text}
                                         </Col>
                                         <Col md={{ span: 4, offset: 4 }}>
-                                            <input type="radio" onChange={(e) => setChoice(e.target.value) } value={choice.text} name="activePollChoice" style={{ width: "20px", height: "20px" }} />
+                                            <input type="radio" onChange={(e) => setChoice(e.target.value) } value={choice.id} name="activePollChoice" style={{ width: "20px", height: "20px" }} />
                                         </Col>
                                     </Row>
                                 </ListGroup.Item>
@@ -72,6 +72,7 @@ function Poll () {
                             </div>
                         </Card.Body>
                     </Card>
+                    {responseMessage && <p>{responseMessage}</p>}
                 </div>
             </Fragment>
         )
