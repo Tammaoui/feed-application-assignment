@@ -1,38 +1,30 @@
-import React, { Component, Fragment } from 'react'
+import React, {Component, Fragment, useEffect, useState} from 'react'
 import Card from "react-bootstrap/Card"
 import ListGroup from "react-bootstrap/ListGroup"
+import "./poll.css"
+import {useSetRecoilState} from "recoil";
+import {activePollEdit} from "../../states/atoms";
 
-export class PollArchive extends Component {
-    render() {
+function PollArchive({polls}) {
+
+        const setActivePoll = useSetRecoilState(activePollEdit)
+
         return (
             <Fragment>
                 <div style={{ display: "flex", justifyContent: "center", paddingTop: "40px" }}>
                     <Card style={{ width: "60%" }}>
-                        <Card.Header className="text-center" ><h3>Active Polls</h3></Card.Header>
+                        <Card.Header className="text-center" ><h3>Polls</h3></Card.Header>
                         <Card.Body>
                             <ListGroup>
-                                <ListGroup.Item>Test</ListGroup.Item>
-                                <ListGroup.Item>Test</ListGroup.Item>
-                                <ListGroup.Item>Test</ListGroup.Item>
-                            </ListGroup>
-                        </Card.Body>
-                    </Card>
-                </div>
-                <div style={{ display: "flex", justifyContent: "center", paddingTop: "40px" }}>
-                    <Card style={{ width: "60%" }}>
-                        <Card.Header className="text-center" ><h3>Archived Polls</h3></Card.Header>
-                        <Card.Body>
-                            <ListGroup>
-                                <ListGroup.Item>Test</ListGroup.Item>
-                                <ListGroup.Item>Test</ListGroup.Item>
-                                <ListGroup.Item>Test</ListGroup.Item>
+                                {polls.map((poll, index) => {
+                                    return <ListGroup key={index} onClick={() => setActivePoll(poll.id)} className="poll-list-element">{poll.poll_question}</ListGroup>
+                                })}
                             </ListGroup>
                         </Card.Body>
                     </Card>
                 </div>
             </Fragment>
         )
-    }
 }
 
 export default PollArchive

@@ -10,6 +10,7 @@ import {
 import Home from "./Home";
 import Profile from "./Profile";
 import Poll from "./MyPolls/Poll";
+import PollPage from "../pages/PollPage";
 
 function Header() {
         return (
@@ -31,7 +32,7 @@ function Header() {
                 <Routes>
                     <Route path="/home" element={<Home/>}/>
                     <Route path="/profile" element={<Profile/>}/>
-                    <Route path="/polls" element={<Poll/>}/>
+                    <Route path="/polls" element={<PollPage/>}/>
                 </Routes>
             </Fragment>
         );

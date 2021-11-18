@@ -12,7 +12,7 @@ function Poll () {
 
         async function getAllPolls() {
             const id = 1;
-            const rawResponse = await fetch(`polls/${id}`);
+            const rawResponse = await fetch(`api/polls/${id}`);
             const data = await rawResponse.json();
             setPoll(data)
         }
@@ -22,7 +22,7 @@ function Poll () {
                 "choice_id": choice
             }
 
-            const rawResponse = await fetch('/choices', {
+            const rawResponse = await fetch('api/choices', {
                 method : "PUT",
                 headers: {
                     "Content-Type": "application/json"

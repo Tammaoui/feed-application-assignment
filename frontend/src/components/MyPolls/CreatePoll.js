@@ -14,6 +14,10 @@ function CreatePoll(){
         const [active, setActive] = useState(false);
         const [pollChoices, setPollChoices] = useState([]);
 
+        function testSubmit()  {
+            console.log("Test")
+        }
+
         async function savePoll() {
             const payload = {
                 "poll_question": pollQuestion,

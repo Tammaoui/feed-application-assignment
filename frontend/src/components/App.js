@@ -3,7 +3,7 @@ import { render } from "react-dom";
 
 
 async function getPolls() {
-    const rawResponse = await fetch("/polls/");
+    const rawResponse = await fetch("api/polls/");
     const data = await rawResponse.json();
 }
 

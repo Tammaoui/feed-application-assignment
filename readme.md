@@ -27,3 +27,10 @@
 
 Not all packages in requirements.txt are required. These are mainly for release version and are not needed for local development.
 For local development, only django and whitenoise is needed.
+
+
+## Nåværende bugs 
+- En bruker kan vote flere ganger
+- Bruker blir ikke redirectet på login
+- Ikke mulighet for å søke etter en poll
+- Ikke mulighet for å opprette poll

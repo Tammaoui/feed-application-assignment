@@ -26,6 +26,7 @@ def hello_world(request):
 @csrf_exempt
 def polls(request):
     response_data = None
+    response_status = HTTPStatus.OK
     print(id)
     match request.method:
         case "POST":
@@ -41,9 +42,15 @@ def polls(request):
                 for poll_choice in poll_choices:
                     pc = Choice(choice_text=poll_choice, poll=poll, votes=0)
                     pc.save()
+            response_data = "Poll created successfully"
+            response_status = HTTPStatus.CREATED
         case "DELETE":
-            poll_id = request.DELETE['id']
-            Poll.objects.get(pk=poll_id).delete()
+            body = json.loads(request.body)
+            poll_id = body['id']
+            poll = Poll.objects.get(pk=poll_id)
+            if request.user == poll.created_by:
+                Poll.objects.get(pk=poll_id).delete()
+                response_data = "Poll deleted."
         case "PUT":
             pass
         case "GET":
@@ -58,7 +65,8 @@ def polls(request):
                     'choices': get_choices_by_poll(poll)
                 })
             response_data = list_of_polls
-    return HttpResponse(json.dumps(response_data), status=HTTPStatus.OK)
+    print(response_data)
+    return HttpResponse(json.dumps(response_data), status=response_status)
 
 
 def get_single_poll(request, id):
