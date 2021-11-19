@@ -2,8 +2,8 @@ import json
 from django.http import HttpResponse
 from http import HTTPStatus
 from .models import Poll, Choice
-
 from django.views.decorators.csrf import csrf_exempt
+import dweepy
 
 
 # Lage en poll
@@ -36,16 +36,23 @@ def polls(request):
             created_by = request.user
             poll = Poll(poll_question=poll_question, active=active, public=public, created_by=created_by)
             poll.save()
-
+            dweepy.dweet({poll.id :{
+                'id': poll.id,
+                'poll_question': poll.poll_question,
+                'active': poll.active,
+                'public': poll.public,
+                'choices': get_choices_by_poll(poll)}
+            })
             poll_choices = body["poll_choices"]
-            print(poll_choices)
             if poll_choices:
                 for poll_choice in poll_choices:
-                    print(poll_choice['choice_text'])
                     pc = Choice(choice_text=poll_choice['choice_text'], poll=poll, votes=0)
                     pc.save()
+                    dweepy.dweet({pc.id : {'id': pc.id, 'choice_text' : pc.choice_text}})
             response_data = "Poll created successfully"
             response_status = HTTPStatus.CREATED
+            all_polls = Poll.objects.all()
+            dweepy.dweet({'polls', all_polls})
         case "DELETE":
             body = json.loads(request.body)
             poll_id = body['id']
@@ -57,16 +64,21 @@ def polls(request):
             pass
         case "GET":
             list_of_polls = []
-            response_data = list(Poll.objects.filter(created_by=request.user))
-            for poll in response_data:
-                list_of_polls.append({
-                    'id': poll.id,
-                    'poll_question': poll.poll_question,
-                    'active': poll.active,
-                    'public': poll.public,
-                    'choices': get_choices_by_poll(poll)
-                })
+            try:
+                list_of_polls = dweepy.get_latest_dweet_for('polls')
+            except Exception as e:
+                response_data = list(Poll.objects.filter(created_by=request.user))
+                for poll in response_data:
+                    list_of_polls.append({
+                        'id': poll.id,
+                        'poll_question': poll.poll_question,
+                        'active': poll.active,
+                        'public': poll.public,
+                        'choices': get_choices_by_poll(poll)
+                    })
+                dweepy.dweet({'polls': list_of_polls})
             response_data = list_of_polls
+            print("Dweepy polls", list_of_polls)
     return HttpResponse(json.dumps(response_data), status=response_status)
 
 
@@ -102,12 +114,12 @@ def search_for_polls(request, query):
     list_of_polls = []
     for poll in polls_queryset:
         list_of_polls.append({
-                    'id': poll.id,
-                    'poll_question': poll.poll_question,
-                    'active': poll.active,
-                    'public': poll.public,
-                    'choices': get_choices_by_poll(poll)
-                })
+            'id': poll.id,
+            'poll_question': poll.poll_question,
+            'active': poll.active,
+            'public': poll.public,
+            'choices': get_choices_by_poll(poll)
+        })
     response_data = list_of_polls
     return HttpResponse(json.dumps(response_data), status=HTTPStatus.OK)
 
@@ -134,7 +146,5 @@ def choices(request):
             choice.votes = choice.votes + 1
             choice.save()
             response_data = 'Your vote has been registered'
-            
-          
 
     return HttpResponse(response_data, status=HTTPStatus.OK)
